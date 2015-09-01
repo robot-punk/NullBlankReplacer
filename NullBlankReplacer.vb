@@ -22,10 +22,10 @@ Module NullBlankReplacer
     Private logBuilder As StringBuilder
 
     ''' <summary>
-    ''' 移行 ID
+    ''' ファイル名
     ''' </summary>
     ''' <remarks></remarks>
-    Private migId As String
+    Private file As String
 
     ''' <summary>
     ''' テンポラリフォルダ
@@ -50,7 +50,7 @@ Module NullBlankReplacer
     ''' エントリポイント
     ''' </summary>
     ''' <param name="cmdArgs">
-    ''' 第一引数：移行 ID
+    ''' 第一引数：ファイル名
     ''' 第二引数：テンポラリデータフォルダ
     ''' 第三引数：データフォルダ
     ''' 第四引数：エラーログフォルダ
@@ -58,7 +58,7 @@ Module NullBlankReplacer
     ''' <remarks></remarks>
     Sub Main(ByVal cmdArgs() As String)
         Debug.WriteLine(DateTime.Now)
-        migId = cmdArgs(0)
+        file = cmdArgs(0)
         tempFolder = cmdArgs(1)
         dataFolder = cmdArgs(2)
         errLogFolder = cmdArgs(3)
@@ -72,7 +72,7 @@ Module NullBlankReplacer
         ' データ変換
         Dim encoding = System.Text.Encoding.GetEncoding("Shift_JIS")
         Try
-            Dim path As String = tempFolder & "\" & migId & ".txt"
+            Dim path As String = tempFolder & "\" & file & ".txt"
             Dim fileName As String = System.IO.Path.GetFileNameWithoutExtension(path)
             Using sr As New StreamReader(path, encoding)
                 Using newDataFile As New StreamWriter(dataFolder & "\" & fileName & ".txt", False, encoding) With {.AutoFlush = True}
@@ -149,8 +149,8 @@ Module NullBlankReplacer
     Private Function Validate() As Boolean
         Dim isValid As Boolean = True
         Dim notExistFolder As String = "{0}が存在しません。"
-        If String.IsNullOrEmpty(migId) Then
-            WriteLog("移行 ID が空です。")
+        If String.IsNullOrEmpty(file) Then
+            WriteLog("ファイル名が空です。")
             isValid = False
         End If
         If Not Directory.Exists(tempFolder) Then
